@@ -26,16 +26,16 @@ CREATE TABLE Clients
     [LastName] NVARCHAR(50) NOT NULL,
     [Address]  NVARCHAR(200) NOT NULL,
     [Phone] NVARCHAR(50) NOT NULL,
-    [Birth] DATE NOT NULL
- /*       [LastContact] DATETIME NOT NULL */
+    [Birth] DATE NOT NULL,
+    [LastContact] DATETIME NOT NULL 
 );
 GO
 
 /** TEMP HERE -  to put on other file to load data - testing here */
 
 INSERT INTO Clients
-VALUES ('John', 'Smith','101 Elm St, Muncie, IN, 47306','765-289-5555','1980-10-01'),
-       ('Jane', 'Doe', '200 Main St, Muncie, IN, 47306', '765-555-3232', '1975-09-24');
+VALUES ('John', 'Smith','101 Elm St, Muncie, IN, 47306','765-289-5555','1980-10-01', '2021-10-12 11:10:00'),
+       ('Jane', 'Doe', '200 Main St, Muncie, IN, 47306', '765-555-3232', '1975-09-24', '2021-09-16 13:30:00');
 
 GO
 
