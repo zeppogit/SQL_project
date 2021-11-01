@@ -22,6 +22,9 @@ IF OBJECT_ID('Clients', 'U') IS NOT NULL
 IF OBJECT_ID('Portfolios', 'U') IS NOT NULL
     DROP TABLE Portfolios;
 
+IF OBJECT_ID('Stocks', 'U') IS NOT NULL
+    DROP TABLE Stocks;
+
 CREATE TABLE Clients
 (
     [ClientID] INT NOT NULL IDENTITY PRIMARY KEY,
@@ -45,9 +48,32 @@ CREATE TABLE Portfolios
 );
 GO
 
+--Stocks (StockID, StockName, StockExchange, ClosingPrice, PE) --can i use / in a name?
+
+CREATE TABLE Stocks
+(
+    [StocksID] INT NOT NULL IDENTITY PRIMARY KEY,
+    [StockName] NVARCHAR(50) NOT NULL,
+    [StockExchange] NVARCHAR(10) NOT NULL,
+    [ClosingPrice] INT NOT NULL, -- need type for dollars
+    [PE] INT NOT NULL,
+);
+GO
+
+/*
+CREATE TABLE StocksHeld
+(
+    [StocksID] INT NOT NULL IDENTITY PRIMARY KEY,
+    [Portfolio_id] INT NOT NULL, 
+    [NumShares] INT NOT NULL,
+    FOREIGN KEY(Portfolio_id) REFERENCES Portfolios(PortfolioID)
+);
+GO
+*/
+
 /** TEMP HERE FOR CONVENIENCE -  SEE other file  LoadData - testing here */
 
 --MY VERIFICATION
 SELECT *
-FROM Portfolios
+FROM Stocks
 GO
