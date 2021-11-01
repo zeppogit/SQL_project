@@ -18,6 +18,9 @@
 
 IF OBJECT_ID('Clients', 'U') IS NOT NULL 
     DROP TABLE Clients;
+    
+IF OBJECT_ID('Portfolios', 'U') IS NOT NULL
+    DROP TABLE Portfolios;
 
 CREATE TABLE Clients
 (
@@ -31,15 +34,20 @@ CREATE TABLE Clients
 );
 GO
 
-/** TEMP HERE -  to put on other file to load data - testing here */
 
-INSERT INTO Clients
-VALUES ('John', 'Smith','101 Elm St, Muncie, IN, 47306','765-289-5555','1980-10-01', '2021-10-12 11:10:00'),
-       ('Jane', 'Doe', '200 Main St, Muncie, IN, 47306', '765-555-3232', '1975-09-24', '2021-09-16 13:30:00');
-
+CREATE TABLE Portfolios
+(
+    [PortfolioID] INT NOT NULL IDENTITY PRIMARY KEY,
+    [Client_id] INT NOT NULL, 
+    [Type] NVARCHAR(50) NOT NULL,
+            -- Type = Regular, IRA, Roth, InheritedIRA, InheritedRoth, Trust
+    FOREIGN KEY(Client_id) REFERENCES Clients(ClientID)
+);
 GO
+
+/** TEMP HERE FOR CONVENIENCE -  SEE other file  LoadData - testing here */
 
 --MY VERIFICATION
 SELECT *
-FROM Clients
+FROM Portfolios
 GO
