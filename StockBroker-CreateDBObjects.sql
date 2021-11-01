@@ -23,18 +23,20 @@ CREATE TABLE Clients
 (
     [ClientID] INT NOT NULL IDENTITY PRIMARY KEY,
     [FirstName] NVARCHAR(50) NOT NULL, 
-    [LastName] NVARCHAR(50) NOT NULL
- /*   [Address]  NVARCHAR(200) NOT NULL,
-    [Birth] DATE NOT NULL,
-    [LastContact] DATETIME NOT NULL */
+    [LastName] NVARCHAR(50) NOT NULL,
+    [Address]  NVARCHAR(200) NOT NULL,
+    [Phone] NVARCHAR(50) NOT NULL,
+    [Birth] DATE NOT NULL
+ /*       [LastContact] DATETIME NOT NULL */
 );
 GO
 
-/** for other file to load data - testing here */
+/** TEMP HERE -  to put on other file to load data - testing here */
 
 INSERT INTO Clients
-VALUES ('John', 'Smith'),
-       ('Jane', 'Doe');
+VALUES ('John', 'Smith','101 Elm St, Muncie, IN, 47306','765-289-5555','1980-10-01'),
+       ('Jane', 'Doe', '200 Main St, Muncie, IN, 47306', '765-555-3232', '1975-09-24');
+
 GO
 
 --MY VERIFICATION
