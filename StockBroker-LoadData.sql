@@ -24,9 +24,19 @@ VALUES (1, 'Roth'),
         (3, 'Regular');
 GO
 
+
+--Stocks (StockID, StockName, StockExchange, ClosingPrice, PE) --can i use / in a name?
+INSERT INTO Stocks
+VALUES ('GOOG', 'Alphabet', 'NASD', 2875.48, 27);
+GO
+
 --MY VERIFICATION
 SELECT *
 FROM Portfolios
+GO
+
+SELECT *
+FROM Stocks
 GO
 
 SELECT *
