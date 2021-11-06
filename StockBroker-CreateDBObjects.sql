@@ -47,12 +47,11 @@ CREATE TABLE Clients
 GO
 
 
-CREATE TABLE Portfolios
+CREATE TABLE Portfolios    -- Type = Regular, IRA, Roth, InheritedIRA, InheritedRoth, Trust
 (
     [PortfolioID] INT NOT NULL IDENTITY PRIMARY KEY,
     [ClientID] INT NOT NULL, 
     [Type] NVARCHAR(50) NOT NULL,
-            -- Type = Regular, IRA, Roth, InheritedIRA, InheritedRoth, Trust
     FOREIGN KEY(ClientID) REFERENCES Clients(ClientID)
 );
 GO
@@ -66,7 +65,7 @@ CREATE TABLE Stocks
     [StockName] NVARCHAR(50) NOT NULL,
     [StockExchange] NVARCHAR(10) NOT NULL,
     [ClosingPrice] FLOAT NOT NULL, -- need type for dollars
-    [PE] INT NOT NULL,
+    [PE] INT -- must allow null for stocks not having a PE (is this default)
 );
 GO
 
@@ -103,5 +102,5 @@ GO
 
 --MY VERIFICATION
 SELECT *
-FROM TradeLog
+FROM Portfolios
 GO
