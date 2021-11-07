@@ -97,6 +97,65 @@ CREATE TABLE TradeLog
 );
 GO
 
+/*****************************************************/
+
+
+/******************************************************
+    Stored Procedures
+******************************************************/
+
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = N'CreateFollowedStock' AND ROUTINE_TYPE = N'PROCEDURE')
+DROP PROCEDURE CreateFollowedStock
+GO
+
+/** 
+    Stored Procedure: CreateFollowedStock
+    Usage: Creates a new stock record to the StocksFollowed table. 
+    Parameters:
+        @Symbol(required) - Stock symbol used to trade the stock.
+        @StockName (required) - The name of the stock (ie. Company name).
+        @StockExchange (required) - The name of the exchange where the stock trades.
+        @ClosingPrice (required) - Current price of the stock as of last close.
+        @PE (required) - Current P/E ratio of the stock.
+    Returns:
+        None
+    Error Checks:
+        Required fields cannot be empty
+**/
+
+CREATE PROCEDURE CreateFollowedStock @Symbol NVARCHAR(10), @StockName NVARCHAR(50), @StockExchange NVARCHAR(10), @ClosingPrice FLOAT, @PE INT  AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+    IF((@Symbol IS NULL OR @StockName IS NULL OR @StockExchange IS NULL OR @ClosingPrice IS NULL) OR (@Symbol = '' OR @StockName = '' OR @StockExchange = '' OR @ClosingPrice = '' OR @PE = ''))
+    BEGIN
+        RAISERROR('@Symbol, @StockName, @StockExchange, @ClosingPrice, and @PE cannot be null or empty',17,0)
+    END
+    ELSE
+    BEGIN
+        DECLARE @StockCount INT = (SELECT COUNT(1) FROM StocksFollowed WHERE Symbol = @Symbol)
+        DECLARE @StockID INT
+        IF(@StockCount = 0)
+        BEGIN
+            INSERT INTO StocksFollowed VALUES (@Symbol, @StockName, @StockExchange, @ClosingPrice, @PE)
+            SET @StockID = (SELECT scope_identity())
+        END
+        ELSE
+        BEGIN
+           SET @StockID = (SELECT StocksFollowed.StockID FROM StocksFollowed WHERE StocksFollowed.Symbol = @Symbol)
+        END
+
+    END
+    END TRY
+    BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
+        SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState );
+    END CATCH
+
+END
+GO
 
 
 
