@@ -31,8 +31,8 @@ VALUES (1, 'Roth'),
 GO
 
 
---Stocks (StockID, StockName, StockExchange, ClosingPrice, PE) 
-INSERT INTO Stocks
+--StocksFollowed (StockID, StockName, StockExchange, ClosingPrice, PE) 
+INSERT INTO StocksFollowed
 VALUES ('GOOG', 'Alphabet Inc', 'NASDAQ', 2875.48, 27),
     ('F', 'Ford Motor Company', 'NASDAQ', 19.20, 27),
     ('DIS', 'Walt Disney Company (The)', 'NASDAQ', 175.63, 280),
@@ -124,14 +124,13 @@ VALUES  (1, 2, 10),
 GO
 
 
-
 --TEMPORARY FOR MY VERIFICATION
 SELECT *
 FROM Portfolios
 GO
 
 SELECT *
-FROM Stocks
+FROM StocksFollowed
 GO
 
 SELECT *

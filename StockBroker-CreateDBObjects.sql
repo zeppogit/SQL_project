@@ -5,7 +5,7 @@
     Clients (ClientID, FirstName, LastName, Address, Phone, Birth, DateLastContacted)
     Portfolios (PortfolioID, Client_id, Type)  
         -- Type = Regular, IRA, Roth, InheritedIRA, InheritedRoth, Trust)
-    Stocks (StockID, StockName, StockExchange, ClosingPrice, PE) --can i use / in a name?
+    StocksFollowed (StockID, StockName, StockExchange, ClosingPrice, PE) --can i use / in a name?
     StocksHeld (Stock_id, Portfolio_id, NumShares)  --or might call it Holdings
     TradeLog (TradeID, datetime, Portfolio_id, Buy/Sell/TransferIn/TransferOut, Stock_id, Num, Price)
  */
@@ -29,8 +29,8 @@ IF OBJECT_ID('Clients', 'U') IS NOT NULL
     DROP TABLE Clients;
 
 
-IF OBJECT_ID('Stocks', 'U') IS NOT NULL
-    DROP TABLE Stocks;   
+IF OBJECT_ID('StocksFollowed', 'U') IS NOT NULL
+    DROP TABLE StocksFollowed;   
 
 
 
@@ -58,7 +58,7 @@ GO
 
 
 
-CREATE TABLE Stocks
+CREATE TABLE StocksFollowed
 (
     [StockID] INT NOT NULL IDENTITY PRIMARY KEY,
     [Symbol] NVARCHAR(10) NOT NULL,  
@@ -77,7 +77,7 @@ CREATE TABLE StocksHeld
     [PortfolioID] INT NOT NULL, 
     [NumShares] INT NOT NULL,
     FOREIGN KEY(PortfolioID) REFERENCES Portfolios(PortfolioID),
-    FOREIGN KEY(StockID) REFERENCES Stocks(StockID)
+    FOREIGN KEY(StockID) REFERENCES StocksFollowed(StockID)
 );
 GO
 
@@ -93,14 +93,17 @@ CREATE TABLE TradeLog
     [Num] INT NOT NULL,
     [Price] FLOAT NOT NULL, -- need type for dollars
     FOREIGN KEY(PortfolioID) REFERENCES Portfolios(PortfolioID),
-    FOREIGN KEY(StockID) REFERENCES Stocks(StockID)
+    FOREIGN KEY(StockID) REFERENCES StocksFollowed(StockID)
 );
 GO
 
 
-/** TEMP HERE FOR CONVENIENCE -  SEE other file  LoadData - testing here */
+
+
+/** TEMP HERE FOR CONVENIENCE -  SEE other file  LoadData - testing here 
 
 --MY VERIFICATION
 SELECT *
 FROM Portfolios
 GO
+*/
