@@ -113,6 +113,10 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = N'Del
 DROP PROCEDURE DeleteFollowedStock
 GO
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = N'StocksHeldByClient' AND ROUTINE_TYPE = N'PROCEDURE')
+DROP PROCEDURE StocksHeldByClient
+GO
+
 /** 
     Stored Procedure: CreateFollowedStock
     Usage: Creates a new stock record to the StocksFollowed table. 
@@ -181,11 +185,49 @@ BEGIN
 END
 GO
 
+/** 
+    Stored Procedure:  StocksHeldByClient
+    Usage:  List portfolios of a client and the stocks they hold.
+    Parameters:
+        @FirstName(required) - First name of client
+        @LastName(required) - Last name of client
 
-/** TEMP HERE FOR CONVENIENCE -  SEE other file  LoadData - testing here 
+    Returns:
+        None
+    Error Checks:
+        None
+**/
 
---MY VERIFICATION
-SELECT *
-FROM Portfolios
+/* ************************************ */
+
+CREATE PROCEDURE StocksHeldByClient @FirstName NVARCHAR(50), @LastName NVARCHAR (50) AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+    IF((@FirstName IS NULL OR @LastName IS NULL) OR (@FirstName = '' OR @LastName = ''))
+    BEGIN
+        RAISERROR('@FirstName and @LastName cannot be null or empty',18,0)
+    END
+    ELSE
+    BEGIN  -- get all portfolios held by a client
+        
+        SELECT Portfolios.Type, Clients.FirstName, Clients.LastName, Stocks.Symbol, StocksHeld.NumShares
+        FROM Portfolios 
+        INNER JOIN Clients ON Clients.ClientID = Portfolios.ClientID
+        INNER JOIN StocksHeld ON StocksHeld.PortfolioID = Portfolios.PortfolioID
+        INNER JOIN Stocks ON Stocks.StockID = StocksHeld.StockID
+        WHERE (FirstName = @FirstName AND LastName = @LastName)
+    END
+    END TRY
+    BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
+        SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState );
+    END CATCH
+
+END
 GO
-*/
+
+
+
+  

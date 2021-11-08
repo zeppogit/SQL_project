@@ -4,7 +4,7 @@
  * Tables:
     Clients (ClientID, FirstName, LastName, Address, Phone, Birth, DateLastContacted)
     Portfolios (PortfolioID, Client_id, Type)  
-        -- Type = Regular, IRA, Roth, InheritedIRA, InheritedRoth, Trust)
+        -- Type = Regular Acct, IRA, Roth, InheritedIRA, InheritedRoth, Trust)
     Stocks (StockID, StockName, StockExchange, ClosingPrice, PE) --can i use / in a name?
     StocksHeld (Stock_id, Portfolio_id, NumShares) 
     TradeLog (TradeID, datetime, Portfolio_id, Buy/Sell/TransferIn/TransferOut, Stock_id, Num, Price)
@@ -20,13 +20,13 @@ GO
 
 INSERT INTO Portfolios      -- Type = Regular, IRA, Roth, InheritedIRA, InheritedRoth, Trust)
 VALUES (1, 'Roth'),
-        (1, 'Regular'),
-        (2, 'Regular'),
+        (1, 'Regular Acct'),
+        (2, 'Regular Acct'),
         (3, 'IRA'),
-        (3, 'Regular'),
-        (4, 'Regular'),
+        (3, 'Regular Acct'),
+        (4, 'Regular Acct'),
         (4, 'InheritedIRA'),
-        (5, 'Regular'),
+        (5, 'Regular Acct'),
         (5, 'IRA');
 GO
 
@@ -209,3 +209,12 @@ FROM StocksHeld
 ORDER BY PortfolioID, StockID
 GO
 */
+
+SELECT Portfolios.Type, Clients.FirstName, Clients.LastName, Stocks.Symbol, StocksHeld.NumShares
+FROM Portfolios 
+   INNER JOIN Clients ON Clients.ClientID = Portfolios.ClientID
+   INNER JOIN StocksHeld ON StocksHeld.PortfolioID = Portfolios.PortfolioID
+   INNER JOIN Stocks ON Stocks.StockID = StocksHeld.StockID
+--GROUP BY Portfolios.ClientID
+GO
+ 
