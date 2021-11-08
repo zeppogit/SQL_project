@@ -109,6 +109,10 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = N'Cre
 DROP PROCEDURE CreateFollowedStock
 GO
 
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = N'DeleteFollowedStock' AND ROUTINE_TYPE = N'PROCEDURE')
+DROP PROCEDURE DeleteFollowedStock
+GO
+
 /** 
     Stored Procedure: CreateFollowedStock
     Usage: Creates a new stock record to the StocksFollowed table. 
@@ -157,6 +161,25 @@ BEGIN
 END
 GO
 
+/** 
+    Stored Procedure: DeleteFollowedStock
+    Usage: Deletes a stock record from the StocksFollowed table. 
+    Parameters:
+        @Symbol(required) - Stock symbol used to trade the stock.
+
+    Returns:
+        None
+    Error Checks:
+        None
+**/
+
+CREATE PROCEDURE DeleteFollowedStock @Symbol NVARCHAR(10) AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @StockID INT = (SELECT StocksFollowed.StockID FROM StocksFollowed WHERE Symbol = @Symbol)
+    DELETE FROM StocksFollowed WHERE StocksFollowed.StockID = @StockID
+END
+GO
 
 
 /** TEMP HERE FOR CONVENIENCE -  SEE other file  LoadData - testing here 
