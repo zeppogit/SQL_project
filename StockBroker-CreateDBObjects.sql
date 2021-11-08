@@ -73,8 +73,8 @@ GO
 CREATE TABLE StocksHeld
 (
     [StocksHeldID] INT NOT NULL IDENTITY PRIMARY KEY,
-    [StockID] INT NOT NULL,
-    [PortfolioID] INT NOT NULL, 
+    [PortfolioID] INT NOT NULL,
+    [StockID] INT NOT NULL, 
     [NumShares] INT NOT NULL,
     FOREIGN KEY(PortfolioID) REFERENCES Portfolios(PortfolioID),
     FOREIGN KEY(StockID) REFERENCES StocksFollowed(StockID)
