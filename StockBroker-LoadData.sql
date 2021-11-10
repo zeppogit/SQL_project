@@ -181,7 +181,8 @@ GO
 
 
 --TEMPORARY FOR MY VERIFICATION
-/* SELECT *
+/* 
+SELECT *
 FROM Portfolios
 GO
 
@@ -193,22 +194,24 @@ SELECT *
 FROM Clients
 GO
 
+SELECT *
+FROM StocksHeld
+GO
+
+
 
 SELECT *
 FROM StocksHeld
+ORDER BY PortfolioID, StockID
 GO
 
 SELECT *
 FROM TradeLog
 GO
+
 */
 
-/*
-SELECT *
-FROM StocksHeld
-ORDER BY PortfolioID, StockID
-GO
-*/
+
 
 SELECT Portfolios.Type, Clients.FirstName, Clients.LastName, Stocks.Symbol, StocksHeld.NumShares
 FROM Portfolios 

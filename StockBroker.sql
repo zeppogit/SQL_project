@@ -9,7 +9,7 @@ EXECUTE DeleteFollowedStock @Symbol = "XOM"
 GO
 
 SELECT *
-FROM StocksFollowed
+FROM clients
 GO
 
 
@@ -42,4 +42,6 @@ GO
 EXECUTE StocksHeldByClient @FirstName = "John", @LastName ="Smith"
 GO
 
+EXECUTE UpdateLastContact @FirstName = "John", @LastName ="Smith", @LastContact = "2021-11-10 11:00:00"
+GO
 

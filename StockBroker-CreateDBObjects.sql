@@ -117,6 +117,10 @@ IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = N'Sto
 DROP PROCEDURE StocksHeldByClient
 GO
 
+IF EXISTS ( SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = N'UpdateLastContact' AND ROUTINE_TYPE = N'PROCEDURE')
+DROP PROCEDURE UpdateLastContact
+GO
+
 /** 
     Stored Procedure: CreateFollowedStock
     Usage: Creates a new stock record to the StocksFollowed table. 
@@ -150,8 +154,11 @@ BEGIN
             SET @StockID = (SELECT scope_identity())
         END
         ELSE
+    
         BEGIN
-           SET @StockID = (SELECT StocksFollowed.StockID FROM StocksFollowed WHERE StocksFollowed.Symbol = @Symbol)
+            --RAISERROR( concat(@Symbol, 'is already being followed.'), 17,0)
+            RAISERROR('This stock is already being followed.', 17,0)
+           --SET @StockID = (SELECT StocksFollowed.StockID FROM StocksFollowed WHERE StocksFollowed.Symbol = @Symbol)
         END
 
     END
@@ -218,6 +225,45 @@ BEGIN
         INNER JOIN Stocks ON Stocks.StockID = StocksHeld.StockID
         WHERE (FirstName = @FirstName AND LastName = @LastName)
     END
+    END TRY
+    BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
+        SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState );
+    END CATCH
+
+END
+GO
+
+
+/** 
+    Stored Procedure: UpdateLastContact 
+    Usage: Updates the date and time there was contact with client.
+    Parameters:
+        @FirstName(required) - First name of the client.
+        @LasstName(required) - Last name of the client.
+        @NewLastContact (required) - The new date contacted.
+    Returns:
+        None
+    Error Checks:
+        Required Fields cannot be empty
+**/
+
+-- note !! add alias to  DATETIME COLUMN IN TRADE TABLE:  AS "Date/time of trade request" etc 
+
+CREATE PROCEDURE UpdateLastContact  @FirstName NVARCHAR(50), @LastName NVARCHAR (50), @LastContact DATETIME AS --why is AS needed? -- enter the time request was made
+BEGIN
+    SET NOCOUNT ON; -- NOT SURE IF I NEED THIS
+    BEGIN TRY
+    IF((@FirstName IS NULL OR @LastName IS NULL OR @LastContact IS NULL) OR (@FirstName = '' OR @LastName = '' OR @LastContact = ''))
+        BEGIN
+        RAISERROR('@FirstName and @LastName cannot be null or empty',18,0)
+        END
+    ELSE
+        BEGIN  -- get
+        UPDATE Clients SET Clients.LastContact = @LastContact WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName);
+    -- make note that this assumes there are no clients with same first and last name 
+        END
     END TRY
     BEGIN CATCH
         DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
