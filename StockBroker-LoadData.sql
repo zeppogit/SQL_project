@@ -30,6 +30,12 @@ VALUES (1, 'Roth'),
         (5, 'IRA');
 GO
 
+/*
+-- TradeLog (TradeID, datetime, Portfolio_id, Stocks_id, Buy/Sell/TransferIn/TransferOut, Num, Price)
+INSERT INTO TradeLog   
+VALUES  ('2010-01-20 10:25:00', 1, 2, 'TransferIn', 50, 385.15);
+GO
+*/
 
 --StocksFollowed (StockID, StockName, StockExchange, ClosingPrice, PE) 
 INSERT INTO StocksFollowed
@@ -187,6 +193,10 @@ FROM Portfolios
 GO
 
 SELECT *
+FROM Stocks
+GO
+
+SELECT *
 FROM StocksFollowed
 GO
 
@@ -197,8 +207,6 @@ GO
 SELECT *
 FROM StocksHeld
 GO
-
-
 
 SELECT *
 FROM StocksHeld
@@ -221,3 +229,6 @@ FROM Portfolios
 --GROUP BY Portfolios.ClientID
 GO
  
+ /* ============================================================= */
+
+

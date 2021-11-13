@@ -88,8 +88,8 @@ CREATE TABLE TradeLog
     [TradeID] INT NOT NULL IDENTITY PRIMARY KEY,
     [DateTime] DATETIME NOT NULL,
     [PortfolioID] INT NOT NULL, 
-    [BuySellInOut] INT NOT NULL,
     [StockID] INT NOT NULL,
+    [BuySellInOut] NVARCHAR(10) NOT NULL,
     [Num] INT NOT NULL,
     [Price] FLOAT NOT NULL, -- need type for dollars
     FOREIGN KEY(PortfolioID) REFERENCES Portfolios(PortfolioID),
@@ -99,6 +99,16 @@ GO
 
 /*****************************************************/
 
+/******************************************************
+    Indexes
+******************************************************/
+CREATE NONCLUSTERED INDEX IX_Symbol ON StocksFollowed (Symbol DESC)
+GO
+
+/* CREATE NONCLUSTERED INDEX IX_StockID ON StocksFollowed (StockID DESC)
+GO
+*/
+-- 
 
 /******************************************************
     Stored Procedures
@@ -274,6 +284,4 @@ BEGIN
 END
 GO
 
-
-
-  
+/* =============================================================== */

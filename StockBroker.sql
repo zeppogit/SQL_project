@@ -2,6 +2,11 @@
 EXECUTE CreateFollowedStock @Symbol = "XOM", @StockName = "Exxon Mobile", @StockExchange = "NYSE", @ClosingPrice = 65.02, @PE = NULL
 GO
 
+/*
+SELECT *
+FROM StocksFollowed
+Go
+*/
 
 /** Delete a stock from StocksFollowed **/
 
@@ -45,3 +50,4 @@ GO
 EXECUTE UpdateLastContact @FirstName = "John", @LastName ="Smith", @LastContact = "2021-11-10 11:00:00"
 GO
 
+/* ================================================== */
