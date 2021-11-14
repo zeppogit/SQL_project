@@ -10,7 +10,7 @@
     TradeLog (TradeID, datetime, Portfolio_id, Buy/Sell/TransferIn/TransferOut, Stock_id, Num, Price)
  */
  
-INSERT INTO Clients --- WILL PROBABLY DELETE LAST CONTACTED FIELD
+INSERT INTO Clients --- 
 VALUES  ('John', 'Smith','101 Elm St, Muncie, IN, 47306','765-289-5555','1980-10-01', '2021-10-12 11:10:00'),
         ('Jane', 'Doe', '200 Main St, Muncie, IN, 47306', '765-555-3232', '1975-09-24', '2021-09-16 13:30:00'),
         ('Henry', 'Miller', '300 10th St, Muncie, IN, 47306', '765-556-3442', '1985-03-24', '2021-09-16 10:30:00'),
@@ -30,13 +30,13 @@ VALUES (1, 'Roth'),
         (5, 'IRA');
 GO
 
-/*
+
 -- TradeLog (TradeID, Portfolio_id, Stocks_id, datetime, Buy/Sell/In/Out, Num, Price)
 
 INSERT INTO TradeLog   
 VALUES  (1, 2, '2010-01-20 10:25:00', 'In', 50, 385.15);
 GO
-*/
+
 
 --StocksFollowed (StockID, Symbol, StockName, StockExchange, ClosingPrice, PE) 
 INSERT INTO StocksFollowed
@@ -213,12 +213,13 @@ SELECT *
 FROM StocksHeld
 ORDER BY PortfolioID, StockID
 GO
+*/
 
 SELECT *
 FROM TradeLog
 GO
 
-*/
+
 
 
 

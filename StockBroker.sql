@@ -35,11 +35,11 @@ GO
 */
 
 
-SELECT Portfolios.Type, Clients.FirstName, Clients.LastName, Stocks.Symbol, StocksHeld.NumShares
+SELECT Portfolios.Type, Clients.FirstName, Clients.LastName, StocksFollowed.Symbol, StocksHeld.NumShares
 FROM Portfolios 
    INNER JOIN Clients ON Clients.ClientID = Portfolios.ClientID
    INNER JOIN StocksHeld ON StocksHeld.PortfolioID = Portfolios.PortfolioID
-   INNER JOIN Stocks ON Stocks.StockID = StocksHeld.StockID
+   INNER JOIN StocksFollowed ON StocksFollowed.StockID = StocksHeld.StockID
 GO
 
 
@@ -47,7 +47,18 @@ GO
 EXECUTE StocksHeldByClient @FirstName = "John", @LastName ="Smith"
 GO
 
-EXECUTE UpdateLastContact @FirstName = "John", @LastName ="Smith", @LastContact = "2021-11-10 11:00:00"
+EXECUTE UpdateLastContact @FirstName = "John", @LastName ="Smith", @LastContact = "2021-08-10 11:00:00"
+GO
+
+EXECUTE LogATrade @TradeDate = "2021-11-09 12:00:00", @FirstName = "NULL", @LastName = "Smith", @AcctType = 'Roth', @Symbol = 'F', @BuySellInOut = 'Buy', @Number = 100, @Price = 17.00
 GO
 
 /* ================================================== */
+
+SELECT *
+FROM Clients
+GO
+
+SELECT *
+FROM TradeLog
+GO

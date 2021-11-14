@@ -7,8 +7,8 @@
         -- Type = Regular, IRA, Roth, InheritedIRA, InheritedRoth, Trust)
     StocksFollowed (StockID, StockName, StockExchange, ClosingPrice, PE) --can i use / in a name?
     StocksHeld (Stock_id, Portfolio_id, NumShares)  --or might call it Holdings
-    TradeLog (TradeID, datetime, Portfolio_id, Buy/Sell/TransferIn/TransferOut, Stock_id, Num, Price)
- */
+    TradeLog (TradeID, Portfolio_id, Stock_id, datetime, BuySellInOut, Num, Price) 
+*/
 
 /**********************************************************
 
@@ -81,19 +81,19 @@ CREATE TABLE StocksHeld
 );
 GO
 
--- TradeLog (TradeID, datetime, Portfolio_id, Buy/Sell/TransferIn/TransferOut, Stocks_id, Num, Price)
 
+ --   TradeLog (TradeID, PortfolioID, StockID, datetime, BuySellInOut, Num, Price)
 CREATE TABLE TradeLog
 (
     [TradeID] INT NOT NULL IDENTITY PRIMARY KEY,
+    [PortfolioID] INT NOT NULL,
+    [StockID] INT NOT NULL, 
     [DateTime] DATETIME NOT NULL,
-    [PortfolioID] INT NOT NULL, 
-    [StockID] INT NOT NULL,
     [BuySellInOut] NVARCHAR(10) NOT NULL,
     [Num] INT NOT NULL,
-    [Price] FLOAT NOT NULL, -- need type for dollars
+    [Price] FLOAT NOT NULL,
     FOREIGN KEY(PortfolioID) REFERENCES Portfolios(PortfolioID),
-    FOREIGN KEY(StockID) REFERENCES StocksFollowed(StockID)
+    FOREIGN KEY(StockID) REFERENCES StocksFollowed(StockID)  -- consider renaming StockID to StocksFollowedID
 );
 GO
 
@@ -102,8 +102,8 @@ GO
 /******************************************************
     Indexes
 ******************************************************/
-CREATE NONCLUSTERED INDEX IX_Symbol ON StocksFollowed (Symbol DESC)
-GO
+--CREATE NONCLUSTERED INDEX IX_Symbol ON StocksFollowed (Symbol DESC)
+--GO
 
 /* CREATE NONCLUSTERED INDEX IX_StockID ON StocksFollowed (StockID DESC)
 GO
@@ -131,6 +131,10 @@ IF EXISTS ( SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = N'Up
 DROP PROCEDURE UpdateLastContact
 GO
 
+IF EXISTS ( SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = N'LogATrade' AND ROUTINE_TYPE = N'PROCEDURE')
+DROP PROCEDURE LogATrade
+GO
+
 /** 
     Stored Procedure: CreateFollowedStock
     Usage: Creates a new stock record to the StocksFollowed table. 
@@ -150,28 +154,26 @@ CREATE PROCEDURE CreateFollowedStock @Symbol NVARCHAR(10), @StockName NVARCHAR(5
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
-    IF((@Symbol IS NULL OR @StockName IS NULL OR @StockExchange IS NULL OR @ClosingPrice IS NULL) OR (@Symbol = '' OR @StockName = '' OR @StockExchange = '' OR @ClosingPrice = '' OR @PE = ''))
-    BEGIN
-        RAISERROR('@Symbol, @StockName, @StockExchange, @ClosingPrice, and @PE cannot be null or empty',17,0)
-    END
-    ELSE
-    BEGIN
-        DECLARE @StockCount INT = (SELECT COUNT(1) FROM StocksFollowed WHERE Symbol = @Symbol)
-        DECLARE @StockID INT
-        IF(@StockCount = 0)
-        BEGIN
-            INSERT INTO StocksFollowed VALUES (@Symbol, @StockName, @StockExchange, @ClosingPrice, @PE)
-            SET @StockID = (SELECT scope_identity())
-        END
+        IF((@Symbol IS NULL OR @StockName IS NULL OR @StockExchange IS NULL OR @ClosingPrice IS NULL) OR (@Symbol = '' OR @StockName = '' OR @StockExchange = '' OR @ClosingPrice = '' OR @PE = ''))
+            BEGIN
+                RAISERROR('@Symbol, @StockName, @StockExchange, @ClosingPrice, and @PE cannot be null or empty',17,0)
+            END
         ELSE
-    
         BEGIN
-            --RAISERROR( concat(@Symbol, 'is already being followed.'), 17,0)
-            RAISERROR('This stock is already being followed.', 17,0)
-           --SET @StockID = (SELECT StocksFollowed.StockID FROM StocksFollowed WHERE StocksFollowed.Symbol = @Symbol)
+            DECLARE @StockCount INT = (SELECT COUNT(1) FROM StocksFollowed WHERE Symbol = @Symbol)
+            DECLARE @StockID INT
+            IF(@StockCount = 0)
+                BEGIN
+                    INSERT INTO StocksFollowed VALUES (@Symbol, @StockName, @StockExchange, @ClosingPrice, @PE)
+                    SET @StockID = (SELECT scope_identity())
+                END
+            ELSE
+                BEGIN
+                    --RAISERROR( concat(@Symbol, 'is already being followed.'), 17,0)
+                    RAISERROR('This stock is already being followed.', 17,0)
+                --SET @StockID = (SELECT StocksFollowed.StockID FROM StocksFollowed WHERE StocksFollowed.Symbol = @Symbol)
+                END
         END
-
-    END
     END TRY
     BEGIN CATCH
         DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
@@ -244,7 +246,11 @@ BEGIN
 
 END
 GO
-
+/*
+SELECT *
+FROM Portfolios
+GO
+*/
 
 /** 
     Stored Procedure: UpdateLastContact 
@@ -284,4 +290,52 @@ BEGIN
 END
 GO
 
+/** 
+    Stored Procedure: LogATrade
+    Usage: Creates a new trade record to the TradeLog table. 
+    -- TradeLog (TradeID, DateTime, BuySellInOut, Num, Price, Portfolio_id, Stocks_id)
+    -- TransType : transaction type is either Buy, Sell, TransferIn, or TransferOut
+    Parameters:
+        @DateTime(required) - Date and time trade requested
+        @FirstName - First name of client
+        @LastName - Last name of client
+        @AcctType - Regular, IRA, Roth, InheritedIRA, InheritedRoth  - assumes no more than one acct of each type
+        @Symbol - Stock symbol
+        @Number of shares traded  -- negative number indicates a sell or transfer, or let type determine?
+        @BuySellInOut
+        @Price  - Price of the stock when traded
+    Returns:
+        None
+    Error Checks:
+        Required fields cannot be empty
+**/
 /* =============================================================== */
+/*
+CREATE PROCEDURE LogATrade @FirstName NVARCHAR(50), @LastName NVARCHAR (50), @AcctType NVARCHAR(10), @Symbol NVARCHAR(10), @BuySellInOut NVARCHAR(10), @Number INT, @Price FLOAT, @TradeDate DATETIME AS --why is AS needed? -- enter the time request was made
+BEGIN
+    UPDATE Clients SET Clients.LastContact = @TradeDate WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName);
+-- make note that this assumes there are no clients with same first and last name 
+    UPDATE StocksHeld SET StocksHeld.NumShares = (StocksHeld.NumShares + @Number)
+
+--   TradeLog (TradeID, PortfolioID, (use @Type @Client to retrieve it, and use FirstName LastName to retrieve @Client), Stock_id (use @Symbol to retrieve it), datetime, BuySellInOut, Num, Price)
+    DECLARE
+    
+    INSERT INTO TradeLog VALUES (PortfolioID, @Symbol, , @Price, @PE)  -- consider changing @Price to @TradePrice
+    INSERT INTO StocksFollowed VALUES (@Symbol, @StockName, @StockExchange, @ClosingPrice, @PE)
+    FROM StocksHeld
+    INNER JOIN Clients ON Portfolios.ClientID = Clients.ClientID
+    LEFT JOIN StocksHeld ON Portfolios.PortfolioID = StocksHeld.PortfolioID
+
+    INNER JOIN StocksFollowed ON StocksHeld.StockID = StocksFollowed.StockID
+    WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName AND StocksHeld.symbol = @Symbol);
+END
+GO*/
+
+
+
+
+
+
+
+
+
