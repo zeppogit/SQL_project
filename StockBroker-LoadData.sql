@@ -5,7 +5,7 @@
     Clients (ClientID, FirstName, LastName, Address, Phone, Birth, DateLastContacted)
     Portfolios (PortfolioID, Client_id, Type)  
         -- Type = Regular Acct, IRA, Roth, InheritedIRA, InheritedRoth, Trust)
-    Stocks (StockID, StockName, StockExchange, ClosingPrice, PE) --can i use / in a name?
+    StocksFollowed (StockID, StockName, StockExchange, ClosingPrice, PE) --can i use / in a name?
     StocksHeld (Stock_id, Portfolio_id, NumShares) 
     TradeLog (TradeID, datetime, Portfolio_id, Buy/Sell/TransferIn/TransferOut, Stock_id, Num, Price)
  */
@@ -31,13 +31,14 @@ VALUES (1, 'Roth'),
 GO
 
 /*
--- TradeLog (TradeID, datetime, Portfolio_id, Stocks_id, Buy/Sell/TransferIn/TransferOut, Num, Price)
+-- TradeLog (TradeID, Portfolio_id, Stocks_id, datetime, Buy/Sell/In/Out, Num, Price)
+
 INSERT INTO TradeLog   
-VALUES  ('2010-01-20 10:25:00', 1, 2, 'TransferIn', 50, 385.15);
+VALUES  (1, 2, '2010-01-20 10:25:00', 'In', 50, 385.15);
 GO
 */
 
---StocksFollowed (StockID, StockName, StockExchange, ClosingPrice, PE) 
+--StocksFollowed (StockID, Symbol, StockName, StockExchange, ClosingPrice, PE) 
 INSERT INTO StocksFollowed
 VALUES ('GOOG', 'Alphabet Inc', 'NASDAQ', 2875.48, 27),
     ('F', 'Ford Motor Company', 'NASDAQ', 19.20, 27),
@@ -221,11 +222,12 @@ GO
 
 
 
-SELECT Portfolios.Type, Clients.FirstName, Clients.LastName, Stocks.Symbol, StocksHeld.NumShares
+SELECT Portfolios.Type, Clients.FirstName, Clients.LastName, StocksFollowed.Symbol, StocksHeld.NumShares
 FROM Portfolios 
-   INNER JOIN Clients ON Clients.ClientID = Portfolios.ClientID
-   INNER JOIN StocksHeld ON StocksHeld.PortfolioID = Portfolios.PortfolioID
-   INNER JOIN Stocks ON Stocks.StockID = StocksHeld.StockID
+    INNER JOIN Clients ON Clients.ClientID = Portfolios.ClientID
+    INNER JOIN StocksHeld ON StocksHeld.PortfolioID = Portfolios.PortfolioID
+    INNER JOIN StocksFollowed ON StocksFollowed.StockID = StocksHeld.StockID
+
 --GROUP BY Portfolios.ClientID
 GO
  
