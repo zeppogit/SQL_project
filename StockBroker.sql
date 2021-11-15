@@ -63,3 +63,7 @@ GO
 SELECT *
 FROM TradeLog
 GO
+
+SELECT *
+FROM StocksHeld
+GO

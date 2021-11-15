@@ -317,16 +317,19 @@ CREATE PROCEDURE LogATrade @FirstName NVARCHAR(50), @LastName NVARCHAR (50), @Ac
 BEGIN
     DECLARE @ClientID INT = (SELECT Clients.ClientID FROM Clients WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName));
 -- make note that this assumes there are no clients with same first and last name     
- --   UPDATE Clients SET Clients.LastContact = @TradeDate WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName);
+ -- UPDATE Clients SET Clients.LastContact = @TradeDate WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName);
     UPDATE Clients SET Clients.LastContact = @TradeDate WHERE (Clients.ClientID = @ClientID);
 -- make note that this assumes there are no clients with same first and last name 
+-- ****  CAN I USE BOTH THE DECLARE AND UPDATE STMTS ABOVE USING A SINGLE WHERE STATEMENT (above uses two identical WHERE conditions)
 
     DECLARE @PortfolioID INT = (SELECT Portfolios.PortfolioID FROM Portfolios WHERE (Portfolios.ClientID = @ClientID AND Portfolios.Type = @AcctType))
     DECLARE @StockID INT = (SELECT StocksFollowed.StockID FROM StocksFollowed WHERE (StocksFollowed.Symbol = @Symbol))
     INSERT INTO TradeLog VALUES (@PortfolioID, @StockID, @BuySellInOut, @Number, @Price, @TradeDate)
-/*    -- consider changing @Price to @TradePrice
+
+   -- consider changing @Price to @TradePrice
+    UPDATE StocksHeld SET StocksHeld.NumShares = (@Number + StocksHeld.NumShares) WHERE (PortfolioID = @PortfolioID);
+/* 
 -- TradeLog (TradeID, PortfolioID, StockID, datetime, Buy/Sell/In/Out, Num, Price)
-    --  INSERT INTO StocksFollowed VALUES (@Symbol, @StockName, @StockExchange, @ClosingPrice, @PE)
 
     INSERT INTO StocksFollowed VALUES (@Symbol, @StockName, @StockExchange, @ClosingPrice, @PE)
     FROM StocksHeld
@@ -335,6 +338,18 @@ BEGIN
 
     INNER JOIN StocksFollowed ON StocksHeld.StockID = StocksFollowed.StockID
     WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName AND StocksHeld.symbol = @Symbol);
+
+
+    CREATE TABLE StocksHeld
+(
+    [StocksHeldID] INT NOT NULL IDENTITY PRIMARY KEY,
+    [PortfolioID] INT NOT NULL,
+    [StockID] INT NOT NULL, 
+    [NumShares] INT NOT NULL,
+    FOREIGN KEY(PortfolioID) REFERENCES Portfolios(PortfolioID),
+    FOREIGN KEY(StockID) REFERENCES StocksFollowed(StockID)
+);
+GO
 */
 END
 GO
