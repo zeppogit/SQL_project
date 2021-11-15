@@ -13,6 +13,7 @@ Go
 EXECUTE DeleteFollowedStock @Symbol = "XOM"
 GO
 
+
 SELECT *
 FROM clients
 GO
