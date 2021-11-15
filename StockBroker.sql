@@ -50,7 +50,7 @@ GO
 EXECUTE UpdateLastContact @FirstName = "John", @LastName ="Smith", @LastContact = "2021-05-10 11:00:00"
 GO
 
-EXECUTE LogATrade @FirstName = "John", @LastName = "Smith", @AcctType = 'Roth', @Symbol = 'F', @BuySellInOut = 'Buy', @Number = 100, @Price = 17.00, @TradeDate = "2021-01-01 12:00:00"
+EXECUTE LogATrade @FirstName = "John", @LastName = "Smith", @AcctType = 'Roth', @Symbol = 'F', @BuySellInOut = 'SELL', @Number = 100, @Price = 17.00, @TradeDate = "2021-01-01 12:00:00"
 GO
 
 

@@ -265,12 +265,12 @@ GO
         Required Fields cannot be empty
 **/
 
--- note !! add alias to  DATETIME COLUMN IN TRADE TABLE:  AS "Date/time of trade request" etc 
+
 
 CREATE PROCEDURE UpdateLastContact  @FirstName NVARCHAR(50), @LastName NVARCHAR (50), @LastContact DATETIME AS
  
 BEGIN
-    SET NOCOUNT ON; -- NOT SURE IF I NEED THIS
+    SET NOCOUNT ON; 
     BEGIN TRY
     IF((@FirstName IS NULL OR @LastName IS NULL OR @LastContact IS NULL) OR (@FirstName = '' OR @LastName = '' OR @LastContact = ''))
         BEGIN
@@ -324,14 +324,25 @@ BEGIN
 
     DECLARE @PortfolioID INT = (SELECT Portfolios.PortfolioID FROM Portfolios WHERE (Portfolios.ClientID = @ClientID AND Portfolios.Type = @AcctType))
     DECLARE @StockID INT = (SELECT StocksFollowed.StockID FROM StocksFollowed WHERE (StocksFollowed.Symbol = @Symbol))
+    IF (@BuySellInOut = 'Sell' OR @BuySellInOut = 'Out') 
+        BEGIN
+          SET @Number = -@Number
+        END
     INSERT INTO TradeLog VALUES (@PortfolioID, @StockID, @BuySellInOut, @Number, @Price, @TradeDate)
-
    -- consider changing @Price to @TradePrice
     UPDATE StocksHeld SET StocksHeld.NumShares = (@Number + StocksHeld.NumShares) WHERE (PortfolioID = @PortfolioID);
-/* 
--- TradeLog (TradeID, PortfolioID, StockID, datetime, Buy/Sell/In/Out, Num, Price)
+    -- DO I ADD A SELECT TO DISPLAY THE TradeLog table or the last row of it to show how the data as entered?
+END
+GO
 
-    INSERT INTO StocksFollowed VALUES (@Symbol, @StockName, @StockExchange, @ClosingPrice, @PE)
+
+-- add aliases to column headers..  ie to  DATETIME COLUMN IN TRADE TABLE:  AS "Date/time of trade request" etc 
+-- format returned tables to use dollar signs?
+
+
+/* 
+
+--- JOINS POSSIBLY NEEDED FOR SELECT STATEMENTS   - NEED TO TAKE A CLOSER LOOK AT USING INNER OR LEFT
     FROM StocksHeld
     INNER JOIN Clients ON Portfolios.ClientID = Clients.ClientID
     LEFT JOIN StocksHeld ON Portfolios.PortfolioID = StocksHeld.PortfolioID
@@ -339,25 +350,7 @@ BEGIN
     INNER JOIN StocksFollowed ON StocksHeld.StockID = StocksFollowed.StockID
     WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName AND StocksHeld.symbol = @Symbol);
 
-
-    CREATE TABLE StocksHeld
-(
-    [StocksHeldID] INT NOT NULL IDENTITY PRIMARY KEY,
-    [PortfolioID] INT NOT NULL,
-    [StockID] INT NOT NULL, 
-    [NumShares] INT NOT NULL,
-    FOREIGN KEY(PortfolioID) REFERENCES Portfolios(PortfolioID),
-    FOREIGN KEY(StockID) REFERENCES StocksFollowed(StockID)
-);
-GO
 */
-END
-GO
-
-
-
-
-
 
 
 
