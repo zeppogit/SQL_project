@@ -18,7 +18,6 @@
 IF OBJECT_ID('TradeLog', 'U') IS NOT NULL
     DROP TABLE TradeLog;
 
-
 IF OBJECT_ID('StocksHeld', 'U') IS NOT NULL
     DROP TABLE StocksHeld;   
 
@@ -97,18 +96,45 @@ CREATE TABLE TradeLog
 GO
   
 
-/*****************************************************/
+/*****************************************************
 
-/******************************************************
     Indexes
-******************************************************/
---CREATE NONCLUSTERED INDEX IX_Symbol ON StocksFollowed (Symbol DESC)
---GO
 
-/* CREATE NONCLUSTERED INDEX IX_StockID ON StocksFollowed (StockID DESC)
+
+    INDEX OPTIONS-  USED IN WHERE CONDITIONS:
+ 	Symbol - used in: 	LogATrade
+					DeleteFollowedStock
+					CreateFollowedStock
+
+					
+  	PortfolioID  used in:	LogATrade
+						
+	ClientID used in:		LogATrade
+	
+	FirstName used in:	StocksHeldByClient
+						UpdateLastContact
+						LogATrade
+
+	LastName used in:	StocksHeldByClient
+						UpdateLastContact
+						LogATrade
+
+	StockID used in:		DeleteFollowedStock  (after retrieving it with a SELECT)
+
+*****************************************************/
+
+/* 
+CREATE NONCLUSTERED INDEX IX_Symbol ON StocksFollowed (Symbol DESC)
 GO
 */
--- 
+
+/* 
+CREATE NONCLUSTERED INDEX IX_StockID ON StocksFollowed (StockID DESC)
+GO
+*/
+
+
+
 
 /******************************************************
     Stored Procedures
@@ -195,6 +221,7 @@ GO
     Error Checks:
         None
 **/
+
 
 CREATE PROCEDURE DeleteFollowedStock @Symbol NVARCHAR(10) AS
 BEGIN
@@ -292,6 +319,9 @@ END
 GO
 
 /** 
+
+**** FOR PURPOSES OF THIS PROJECT, IT IS ASSUMMED NO TWO CLIENTS CAN HAVE THE SAME FIRST AND LAST NAME  *****
+
     Stored Procedure: LogATrade
     Usage: Creates a new trade record to the TradeLog table. 
     -- TradeLog (TradeID, DateTime, BuySellInOut, Num, Price, Portfolio_id, Stocks_id)
