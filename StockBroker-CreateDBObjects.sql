@@ -28,7 +28,6 @@ IF OBJECT_ID('Portfolios', 'U') IS NOT NULL
 IF OBJECT_ID('Clients', 'U') IS NOT NULL 
     DROP TABLE Clients;
 
-
 IF OBJECT_ID('StocksFollowed', 'U') IS NOT NULL
     DROP TABLE StocksFollowed;   
 
@@ -88,14 +87,15 @@ CREATE TABLE TradeLog
     [TradeID] INT NOT NULL IDENTITY PRIMARY KEY,
     [PortfolioID] INT NOT NULL,
     [StockID] INT NOT NULL, 
-    [DateTime] DATETIME NOT NULL,
     [BuySellInOut] NVARCHAR(10) NOT NULL,
     [Num] INT NOT NULL,
     [Price] FLOAT NOT NULL,
+    [DateTime] DATETIME NOT NULL,
     FOREIGN KEY(PortfolioID) REFERENCES Portfolios(PortfolioID),
     FOREIGN KEY(StockID) REFERENCES StocksFollowed(StockID)  -- consider renaming StockID to StocksFollowedID
 );
 GO
+  
 
 /*****************************************************/
 
@@ -267,7 +267,8 @@ GO
 
 -- note !! add alias to  DATETIME COLUMN IN TRADE TABLE:  AS "Date/time of trade request" etc 
 
-CREATE PROCEDURE UpdateLastContact  @FirstName NVARCHAR(50), @LastName NVARCHAR (50), @LastContact DATETIME AS --why is AS needed? -- enter the time request was made
+CREATE PROCEDURE UpdateLastContact  @FirstName NVARCHAR(50), @LastName NVARCHAR (50), @LastContact DATETIME AS
+ 
 BEGIN
     SET NOCOUNT ON; -- NOT SURE IF I NEED THIS
     BEGIN TRY
@@ -310,17 +311,23 @@ GO
         Required fields cannot be empty
 **/
 /* =============================================================== */
-/*
-CREATE PROCEDURE LogATrade @FirstName NVARCHAR(50), @LastName NVARCHAR (50), @AcctType NVARCHAR(10), @Symbol NVARCHAR(10), @BuySellInOut NVARCHAR(10), @Number INT, @Price FLOAT, @TradeDate DATETIME AS --why is AS needed? -- enter the time request was made
-BEGIN
-    UPDATE Clients SET Clients.LastContact = @TradeDate WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName);
--- make note that this assumes there are no clients with same first and last name 
-    UPDATE StocksHeld SET StocksHeld.NumShares = (StocksHeld.NumShares + @Number)
 
---   TradeLog (TradeID, PortfolioID, (use @Type @Client to retrieve it, and use FirstName LastName to retrieve @Client), Stock_id (use @Symbol to retrieve it), datetime, BuySellInOut, Num, Price)
-    DECLARE
-    
-    INSERT INTO TradeLog VALUES (PortfolioID, @Symbol, , @Price, @PE)  -- consider changing @Price to @TradePrice
+CREATE PROCEDURE LogATrade @FirstName NVARCHAR(50), @LastName NVARCHAR (50), @AcctType NVARCHAR(10), @Symbol NVARCHAR(10), @BuySellInOut NVARCHAR(10), @Number INT, @Price FLOAT, @TradeDate DATETIME AS 
+
+BEGIN
+    DECLARE @ClientID INT = (SELECT Clients.ClientID FROM Clients WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName));
+-- make note that this assumes there are no clients with same first and last name     
+ --   UPDATE Clients SET Clients.LastContact = @TradeDate WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName);
+    UPDATE Clients SET Clients.LastContact = @TradeDate WHERE (Clients.ClientID = @ClientID);
+-- make note that this assumes there are no clients with same first and last name 
+
+    DECLARE @PortfolioID INT = (SELECT Portfolios.PortfolioID FROM Portfolios WHERE (Portfolios.ClientID = @ClientID AND Portfolios.Type = @AcctType))
+    DECLARE @StockID INT = (SELECT StocksFollowed.StockID FROM StocksFollowed WHERE (StocksFollowed.Symbol = @Symbol))
+    INSERT INTO TradeLog VALUES (@PortfolioID, @StockID, @BuySellInOut, @Number, @Price, @TradeDate)
+/*    -- consider changing @Price to @TradePrice
+-- TradeLog (TradeID, PortfolioID, StockID, datetime, Buy/Sell/In/Out, Num, Price)
+    --  INSERT INTO StocksFollowed VALUES (@Symbol, @StockName, @StockExchange, @ClosingPrice, @PE)
+
     INSERT INTO StocksFollowed VALUES (@Symbol, @StockName, @StockExchange, @ClosingPrice, @PE)
     FROM StocksHeld
     INNER JOIN Clients ON Portfolios.ClientID = Clients.ClientID
@@ -328,8 +335,10 @@ BEGIN
 
     INNER JOIN StocksFollowed ON StocksHeld.StockID = StocksFollowed.StockID
     WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName AND StocksHeld.symbol = @Symbol);
+*/
 END
-GO*/
+GO
+
 
 
 

@@ -41,17 +41,18 @@ FROM Portfolios
    INNER JOIN StocksHeld ON StocksHeld.PortfolioID = Portfolios.PortfolioID
    INNER JOIN StocksFollowed ON StocksFollowed.StockID = StocksHeld.StockID
 GO
-
+-- this is performed by procedure StocksHeldByClient
 
 ----------------------------------
 EXECUTE StocksHeldByClient @FirstName = "John", @LastName ="Smith"
 GO
 
-EXECUTE UpdateLastContact @FirstName = "John", @LastName ="Smith", @LastContact = "2021-08-10 11:00:00"
+EXECUTE UpdateLastContact @FirstName = "John", @LastName ="Smith", @LastContact = "2021-05-10 11:00:00"
 GO
 
-EXECUTE LogATrade @TradeDate = "2021-11-09 12:00:00", @FirstName = "NULL", @LastName = "Smith", @AcctType = 'Roth', @Symbol = 'F', @BuySellInOut = 'Buy', @Number = 100, @Price = 17.00
+EXECUTE LogATrade @FirstName = "John", @LastName = "Smith", @AcctType = 'Roth', @Symbol = 'F', @BuySellInOut = 'Buy', @Number = 100, @Price = 17.00, @TradeDate = "2021-01-01 12:00:00"
 GO
+
 
 /* ================================================== */
 

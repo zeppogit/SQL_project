@@ -3,11 +3,11 @@
  *
  * Tables:
     Clients (ClientID, FirstName, LastName, Address, Phone, Birth, DateLastContacted)
-    Portfolios (PortfolioID, Client_id, Type)  
+    Portfolios (PortfolioID, ClientID, Type)  
         -- Type = Regular Acct, IRA, Roth, InheritedIRA, InheritedRoth, Trust)
     StocksFollowed (StockID, StockName, StockExchange, ClosingPrice, PE) --can i use / in a name?
-    StocksHeld (Stock_id, Portfolio_id, NumShares) 
-    TradeLog (TradeID, datetime, Portfolio_id, Buy/Sell/TransferIn/TransferOut, Stock_id, Num, Price)
+    StocksHeld (StockID, PortfolioID, NumShares) 
+    TradeLog (TradeID, datetime, PortfolioID, Buy/Sell/TransferIn/TransferOut, StockID, Num, Price)
  */
  
 INSERT INTO Clients --- 
@@ -30,12 +30,6 @@ VALUES (1, 'Roth'),
         (5, 'IRA');
 GO
 
-
--- TradeLog (TradeID, Portfolio_id, Stocks_id, datetime, Buy/Sell/In/Out, Num, Price)
-
-INSERT INTO TradeLog   
-VALUES  (1, 2, '2010-01-20 10:25:00', 'In', 50, 385.15);
-GO
 
 
 --StocksFollowed (StockID, Symbol, StockName, StockExchange, ClosingPrice, PE) 
@@ -75,7 +69,7 @@ VALUES ('GOOG', 'Alphabet Inc', 'NASDAQ', 2875.48, 27),
     ('NOK', 'Nokia Corp.', 'NYSE', 5.77, NULL);
     GO
 
-    --  StocksHeld (Portfolio_id, Stock_id, NumShares) 
+    --  StocksHeld (PortfolioID, StockID, NumShares) 
 INSERT INTO StocksHeld   
 VALUES  (1, 2, 200),
         (1, 11, 200),
@@ -129,62 +123,16 @@ VALUES  (1, 2, 200),
         (9, 25, 10);
 GO
 
+-- TradeLog (TradeID, PortfolioID, StockID, datetime, Buy/Sell/In/Out, Num, Price)
 
 /*
-    --  StocksHeld ( Stock_id, Portfolio_id, NumShares) 
-INSERT INTO StocksHeld   
-VALUES  (1, 2, 10),
-        (1, 4, 10),
-        (1, 8, 20),
-        (1, 9, 10),
-        (2, 1, 200),
-        (2, 2, 100),
-        (2, 3, 100),
-        (2, 7, 100),
-        (4, 6, 10),
-        (5, 3, 100),
-        (6, 5, 10),
-        (7, 4, 10),
-        (7, 6, 10),
-        (7, 8, 10),
-        (9, 2, 10),
-        (9, 3, 1),
-        (9, 5, 10),
-        (9, 9, 10),
-        (10, 4, 10),
-        (10, 5, 10),
-        (10, 7, 10),
-        (11, 1, 200),
-        (11, 6, 100),
-        (11, 8, 100),
-        (12, 6, 1),
-        (12, 9, 10),
-        (14, 5, 10),
-        (14, 6, 10),
-        (16, 1, 10),
-        (16, 2, 10),
-        (16, 4, 10),
-        (16, 7, 10),
-        (17, 2, 100),
-        (17, 3, 100),
-        (17, 9, 100),
-        (18, 8, 100),
-        (19, 1, 100),
-        (19, 6, 100),
-        (19, 7, 100),
-        (21, 7, 10),
-        (21, 4, 100),
-        (21, 5, 100),
-        (21, 9, 100),
-        (22, 9, 100),
-        (25, 2, 10),
-        (25, 6, 10),
-        (25, 9, 10),
-        (28, 1, 10),
-        (28, 3, 10),
-        (28, 8, 1);
+INSERT INTO TradeLog   
+VALUES  (1, 2, '2010-01-20 10:25:00', 'In', 50, 385.15);
 GO
 */
+
+
+
 
 
 --TEMPORARY FOR MY VERIFICATION
@@ -213,24 +161,12 @@ SELECT *
 FROM StocksHeld
 ORDER BY PortfolioID, StockID
 GO
-*/
+
 
 SELECT *
 FROM TradeLog
 GO
-
-
-
-
-
-SELECT Portfolios.Type, Clients.FirstName, Clients.LastName, StocksFollowed.Symbol, StocksHeld.NumShares
-FROM Portfolios 
-    INNER JOIN Clients ON Clients.ClientID = Portfolios.ClientID
-    INNER JOIN StocksHeld ON StocksHeld.PortfolioID = Portfolios.PortfolioID
-    INNER JOIN StocksFollowed ON StocksFollowed.StockID = StocksHeld.StockID
-
---GROUP BY Portfolios.ClientID
-GO
+*/
  
  /* ============================================================= */
 
