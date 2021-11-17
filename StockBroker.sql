@@ -14,10 +14,6 @@ EXECUTE DeleteFollowedStock @Symbol = "XOM"
 GO
 
 
-SELECT *
-FROM clients
-GO
-
 
 -- ====================================================================================
 /* 
@@ -53,6 +49,8 @@ GO
 
 EXECUTE LogATrade @FirstName = "John", @LastName = "Smith", @AcctType = 'Roth', @Symbol = 'F', @BuySellInOut = 'SELL', @Number = 100, @Price = 17.00, @TradeDate = "2021-01-01 12:00:00"
 GO
+-- AS IT IS, THIS IS CHANGING THE VALUE OF @NUMBER WITHIN THE TABLE, TO A NEGATIVE PER "SELL"-- NOT MY INTENT,
+-- NEED TO FIX
 
 
 /* ================================================== */
@@ -61,10 +59,36 @@ SELECT *
 FROM Clients
 GO
 
+
 SELECT *
 FROM TradeLog
 GO
 
 SELECT *
-FROM StocksHeld
+FROM StocksFollowed
 GO
+
+/* MY TEMPORARY NOTES +++++++++++++++++++++++++++++++++++  
+
+
+    INDEX OPTIONS-  USED IN WHERE CONDITIONS:
+ 	Symbol - used in: 	LogATrade
+					DeleteFollowedStock
+					CreateFollowedStock
+
+					
+  	PortfolioID  used in:	LogATrade
+						
+	ClientID used in:		LogATrade
+	
+	FirstName used in:	StocksHeldByClient
+						UpdateLastContact
+						LogATrade
+
+	LastName used in:	StocksHeldByClient
+						UpdateLastContact
+						LogATrade
+
+	StockID used in:		DeleteFollowedStock  (after retrieving it with a SELECT)
+
+   ++++++++++++++++++++++++++++++++++++ */
