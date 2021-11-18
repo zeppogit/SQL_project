@@ -16,11 +16,11 @@ Stored procedures will be added which
 
 | Feature | Command |
 | -------- | -------- |
-| List all portfolios of a client and the stocks they hold |
-| Add a new stock to the list of Stocks Followed |
-| Delete a stock from the list of Stocks Followed|
-| Log a new transaction and reflect changes in client's portfolio and personal record (date of last contact)|
-| List all transactions by a particular client|
+| List all portfolios of a client and the stocks they hold | StocksHeldByClient|
+| Add a new stock to the list of Stocks Followed | CreateFollowedStock |
+| Delete a stock from the list of Stocks Followed| DeleteFollowedStock |
+| Log a new transaction and reflect changes in client's portfolio and personal record (date of last contact)| TradeLog |
+| Update the date and time of last contact with a client | UpdateLastContact |
 
 ## Technical Instructions
 - Requires MS SQL Server or Azure (I used Azure).
@@ -30,12 +30,12 @@ Stored procedures will be added which
 
 ## Project Requirements included
 ● Group 1: Reading Data from a Database
-    ○ Write a SELECT query that uses a WHERE clause. (See the StocksHeldByClient procedure)
+    - Write a SELECT query that uses a WHERE clause. (See the StocksHeldByClient procedure)
 
 ● Group 2: Updating / Deleting Data from a Database
-    ○ Write a DML statement that UPDATEs a set of rows with a WHERE clause. The
+    - Write a DML statement that UPDATEs a set of rows with a WHERE clause. The
 values used in the WHERE clause should be a variable.  (See the UpdateLastContact procedure)
 
 ● Group 3: Optimizing a Database
-    ○ Design a NONCLUSTERED INDEX with ONE KEY COLUMN that improves the
+    - Design a NONCLUSTERED INDEX with ONE KEY COLUMN that improves the
 performance of one of the above queries.
