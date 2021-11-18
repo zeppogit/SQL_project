@@ -2,13 +2,26 @@
  * Author: Rick Sweeney
  *
  * Tables:
-    Clients (ClientID, FirstName, LastName, Address, Phone, Birth, DateLastContacted)
-    Portfolios (PortfolioID, Client_id, Type)  
-        -- Type = Regular, IRA, Roth, InheritedIRA, InheritedRoth, Trust)
-    StocksFollowed (StockID, StockName, StockExchange, ClosingPrice, PE) 
-    StocksHeld (Stock_id, Portfolio_id, NumShares)  
-    TradeLog (TradeID, Portfolio_id, Stock_id, datetime, BuySellInOut, Num, Price) 
-*/
+ *      Clients (ClientID, FirstName, LastName, Address, Phone, Birth, DateLastContacted)
+ *      Portfolios (PortfolioID, Client_id, Type)  
+ *        -- Type = Regular, IRA, Roth, InheritedIRA, InheritedRoth, Trust)
+ *      StocksFollowed (StockID, StockName, StockExchange, ClosingPrice, PE) 
+ *      StocksHeld (Stock_id, Portfolio_id, NumShares)  
+ *      TradeLog (TradeID, Portfolio_id, Stock_id, datetime, BuySellInOut, Num, Price) 
+ *
+ * Indexes:
+ *      IX_Symbol
+ *
+ * Stored Procedures
+ *      CreateFollowedStock @Symbol, @StockName, @StockExchange, @ClosingPrice, @PE
+ *      DeleteFollowedStock @Symbol
+ *      StocksHeldByClient @FirstName, @LastName
+ *      UpdateLastContact @FirstName, @LastName, @LastContact 
+ *      LogATrade @FirstName, @LastName, @AcctType, @Symbol, @BuySellInOut, @Number, @Price, @TradeDate
+ *
+ */
+
+
 
 /**********************************************************
 
@@ -21,16 +34,16 @@ IF OBJECT_ID('TradeLog', 'U') IS NOT NULL
 IF OBJECT_ID('StocksHeld', 'U') IS NOT NULL
     DROP TABLE StocksHeld;   
 
+IF OBJECT_ID('StocksFollowed', 'U') IS NOT NULL
+    DROP TABLE StocksFollowed;
+    
 IF OBJECT_ID('Portfolios', 'U') IS NOT NULL
     DROP TABLE Portfolios;
 
 IF OBJECT_ID('Clients', 'U') IS NOT NULL 
     DROP TABLE Clients;
 
-IF OBJECT_ID('StocksFollowed', 'U') IS NOT NULL
-    DROP TABLE StocksFollowed;   
-
-
+   
 
 CREATE TABLE Clients
 (
@@ -53,7 +66,6 @@ CREATE TABLE Portfolios    -- Type = Regular, IRA, Roth, InheritedIRA, Inherited
     FOREIGN KEY(ClientID) REFERENCES Clients(ClientID)
 );
 GO
-
 
 
 CREATE TABLE StocksFollowed
@@ -165,9 +177,7 @@ BEGIN
             IF(@StockCount = 0)
                 BEGIN
                     INSERT INTO StocksFollowed VALUES (@Symbol, @StockName, @StockExchange, @ClosingPrice, @PE)
-                    --SET @StockID = (SELECT scope_identity())
-                    -- necessary to set StockID (the primary key of StocksFollowed table)
-                END
+               END
             ELSE
                 BEGIN
                     RAISERROR('This stock is already being followed.', 17,0)
@@ -188,7 +198,6 @@ GO
     Usage: Deletes a stock record from the StocksFollowed table. 
     Parameters:
         @Symbol(required) - Stock symbol used to trade the stock.
-
     Returns:
         None
     Error Checks:
@@ -208,9 +217,8 @@ GO
     Stored Procedure:  StocksHeldByClient
     Usage:  List portfolios of a client and the stocks they hold.
     Parameters:
-        @FirstName(required) - First name of client
-        @LastName(required) - Last name of client
-
+        @FirstName (required) - First name of client
+        @LastName (required) - Last name of client
     Returns:
         None
     Error Checks:
@@ -246,19 +254,15 @@ BEGIN
 
 END
 GO
-/*
-SELECT *
-FROM Portfolios
-GO
-*/
+
 
 /** 
     Stored Procedure: UpdateLastContact 
     Usage: Updates the date and time there was contact with client.
     Parameters:
-        @FirstName(required) - First name of the client.
-        @LasstName(required) - Last name of the client.
-        @NewLastContact (required) - The new date contacted.
+        @FirstName (required) - First name of the client.
+        @LasstName (required) - Last name of the client.
+        @LastContact (required) - The new date contacted.
     Returns:
         None
     Error Checks:
@@ -292,13 +296,12 @@ END
 GO
 
 /** 
-
-**** FOR PURPOSES OF THIS PROJECT, IT IS ASSUMMED NO TWO CLIENTS CAN HAVE THE SAME FIRST AND LAST NAME  *****
-
     Stored Procedure: LogATrade
     Usage: Creates a new trade record to the TradeLog table. 
     -- TradeLog (TradeID, DateTime, BuySellInOut, Num, Price, Portfolio_id, Stocks_id)
     -- TransType : transaction type is either Buy, Sell, In ( a transfer in), or Out.
+    -- FOR PURPOSES OF THIS PROJECT, IT IS ASSUMED NO TWO CLIENTS CAN HAVE THE SAME FIRST AND LAST NAME  *****
+
     Parameters:
         @DateTime(required) - Date and time trade requested
         @FirstName - First name of client
@@ -313,6 +316,7 @@ GO
     Error Checks:
         Required fields cannot be empty
 **/
+
 /* =============================================================== */
 
 CREATE PROCEDURE LogATrade @FirstName NVARCHAR(50), @LastName NVARCHAR (50), @AcctType NVARCHAR(10), @Symbol NVARCHAR(10), @BuySellInOut NVARCHAR(10), @Number INT, @Price FLOAT, @TradeDate DATETIME AS 
@@ -332,21 +336,6 @@ BEGIN
 
 END
 GO
-
-
-/* 
-
---- JOINS POSSIBLY NEEDED FOR SELECT STATEMENTS   - NEED TO TAKE A CLOSER LOOK AT USING INNER OR LEFT
-    FROM StocksHeld
-    INNER JOIN Clients ON Portfolios.ClientID = Clients.ClientID
-    LEFT JOIN StocksHeld ON Portfolios.PortfolioID = StocksHeld.PortfolioID
-
-    INNER JOIN StocksFollowed ON StocksHeld.StockID = StocksFollowed.StockID
-    WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName AND StocksHeld.symbol = @Symbol);
-
-*/
-
-
 
 
 

@@ -4,10 +4,14 @@
  * Tables:
     Clients (ClientID, FirstName, LastName, Address, Phone, Birth, DateLastContacted)
     Portfolios (PortfolioID, ClientID, Type)  
-        -- Type = Regular Acct, IRA, Roth, InheritedIRA, InheritedRoth, Trust)
+        -- Type: Regular Acct, IRA, Roth, Inherited IRA, Inherited Roth, or Trust)
     StocksFollowed (StockID, StockName, StockExchange, ClosingPrice, PE) --can i use / in a name?
     StocksHeld (StockID, PortfolioID, NumShares) 
-    TradeLog (TradeID, datetime, PortfolioID, Buy/Sell/TransferIn/TransferOut, StockID, Num, Price)
+    TradeLog (TradeID, datetime, PortfolioID, BuySellInOut, StockID, Num, Price)
+        -- datetime: date and time of transaction
+        -- BuySellInOut: Buy, Sell, In, Out  ("In" and "Out" indicating transfers rather than Buy or Sell)
+        -- Num: number of shares in transaction
+        -- Price:  stock price used in transaction
  */
  
 INSERT INTO Clients --- 
@@ -18,18 +22,17 @@ VALUES  ('John', 'Smith','101 Elm St, Muncie, IN, 47306','765-289-5555','1980-10
         ('Ed', 'Norton', '300 Sewer St, Muncie, IN, 47306', '765-555-3600', '1927-03-14', '2021-03-20 15:40:00');
 GO
 
-INSERT INTO Portfolios      -- Type = Regular, IRA, Roth, InheritedIRA, InheritedRoth, Trust)
+INSERT INTO Portfolios 
 VALUES (1, 'Roth'),
         (1, 'Regular Acct'),
         (2, 'Regular Acct'),
         (3, 'IRA'),
         (3, 'Regular Acct'),
         (4, 'Regular Acct'),
-        (4, 'InheritedIRA'),
+        (4, 'Inherited IRA'),
         (5, 'Regular Acct'),
         (5, 'IRA');
 GO
-
 
 
 --StocksFollowed (StockID, Symbol, StockName, StockExchange, ClosingPrice, PE) 
@@ -69,7 +72,7 @@ VALUES ('GOOG', 'Alphabet Inc', 'NASDAQ', 2875.48, 27),
     ('NOK', 'Nokia Corp.', 'NYSE', 5.77, NULL);
     GO
 
-    --  StocksHeld (PortfolioID, StockID, NumShares) 
+--  StocksHeld (PortfolioID, StockID, NumShares) 
 INSERT INTO StocksHeld   
 VALUES  (1, 2, 200),
         (1, 11, 200),
@@ -123,26 +126,24 @@ VALUES  (1, 2, 200),
         (9, 25, 10);
 GO
 
--- TradeLog (TradeID, PortfolioID, StockID, datetime, Buy/Sell/In/Out, Num, Price)
+-- TradeLog (TradeID, PortfolioID, StockID, datetime, BuySellInOut, Num, Price)
 
-/*
 INSERT INTO TradeLog   
 VALUES  (1, 2, '2010-01-20 10:25:00', 'In', 50, 385.15);
 GO
-*/
-
-
 
 
 
 --TEMPORARY FOR MY VERIFICATION
-/* 
+
+/*
+
 SELECT *
-FROM Portfolios
+FROM Clients
 GO
 
 SELECT *
-FROM Stocks
+FROM Portfolios
 GO
 
 SELECT *
@@ -150,11 +151,11 @@ FROM StocksFollowed
 GO
 
 SELECT *
-FROM Clients
+FROM StocksHeld
 GO
 
 SELECT *
-FROM StocksHeld
+FROM TradeLog
 GO
 
 SELECT *
@@ -162,12 +163,4 @@ FROM StocksHeld
 ORDER BY PortfolioID, StockID
 GO
 
-
-SELECT *
-FROM TradeLog
-GO
 */
- 
- /* ============================================================= */
-
-
