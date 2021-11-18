@@ -1,5 +1,6 @@
 /* StockBroker-CreateDBObjects.sql
  * Author: Rick Sweeney
+ * Date Created: 11/18/2021
  *
  * Tables:
  *      Clients (ClientID, FirstName, LastName, Address, Phone, Birth, DateLastContacted)

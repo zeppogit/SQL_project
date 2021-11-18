@@ -1,18 +1,9 @@
 /* StockBroker-LoadData.sql
  * Author: Rick Sweeney
- *
- * Tables:
-    Clients (ClientID, FirstName, LastName, Address, Phone, Birth, DateLastContacted)
-    Portfolios (PortfolioID, ClientID, Type)  
-        -- Type: Regular Acct, IRA, Roth, Inherited IRA, Inherited Roth, or Trust)
-    StocksFollowed (StockID, StockName, StockExchange, ClosingPrice, PE) --can i use / in a name?
-    StocksHeld (StockID, PortfolioID, NumShares) 
-    TradeLog (TradeID, datetime, PortfolioID, BuySellInOut, StockID, Num, Price)
-        -- datetime: date and time of transaction
-        -- BuySellInOut: Buy, Sell, In, Out  ("In" and "Out" indicating transfers rather than Buy or Sell)
-        -- Num: number of shares in transaction
-        -- Price:  stock price used in transaction
+ * Date Created: 11/18/2021
+ * Description:  sample date for StockBroker app
  */
+
  
 INSERT INTO Clients --- 
 VALUES  ('John', 'Smith','101 Elm St, Muncie, IN, 47306','765-289-5555','1980-10-01', '2021-10-12 11:10:00'),
