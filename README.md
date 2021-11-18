@@ -29,13 +29,13 @@ Stored procedures will be added which
 - The StockBroker.sql file has example commands showing how to use the stored procedures.
 
 ## Project Requirements included
-● Group 1: Reading Data from a Database
+Group 1: Reading Data from a Database
     - Write a SELECT query that uses a WHERE clause. (See the StocksHeldByClient procedure)
 
-● Group 2: Updating / Deleting Data from a Database
+Group 2: Updating / Deleting Data from a Database
     - Write a DML statement that UPDATEs a set of rows with a WHERE clause. The
 values used in the WHERE clause should be a variable.  (See the UpdateLastContact procedure)
 
-● Group 3: Optimizing a Database
+Group 3: Optimizing a Database
     - Design a NONCLUSTERED INDEX with ONE KEY COLUMN that improves the
 performance of one of the above queries.
