@@ -115,7 +115,10 @@ GO
 *****************************************************/
 
 
-CREATE NONCLUSTERED INDEX IX_Symbol ON StocksFollowed (Symbol DESC)
+CREATE NONCLUSTERED INDEX IX_Symbol ON StocksFollowed 
+(
+    Symbol DESC
+)
 GO
 
 

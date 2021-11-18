@@ -8,7 +8,7 @@ I created a database with a stock broker them with imaginary client and stock in
 
 # Description
 
-The database includes tables that store information about stocks that a broker follows, clients, stocks held by his clients, client portfolios made up of stocks that the broker follows, and a transaction log.
+The database includes tables that store information about stocks that a broker follows, clients, stocks held by his clients, client portfolios made up of stocks that the broker follows, and a transaction log.        
 
 ## Features
 
@@ -27,3 +27,15 @@ Stored procedures will be added which
 - Execute the StockBroker-CreateDBObjects.sql script to create the database objects
 - Execute the StockBroker-LoadSampleData.sql script to load the sample data
 - The StockBroker.sql file has example commands showing how to use the stored procedures.
+
+## Project Requirements included
+● Group 1: Reading Data from a Database
+    ○ Write a SELECT query that uses a WHERE clause. (See the StocksHeldByClient procedure)
+
+● Group 2: Updating / Deleting Data from a Database
+    ○ Write a DML statement that UPDATEs a set of rows with a WHERE clause. The
+values used in the WHERE clause should be a variable.  (See the UpdateLastContact procedure)
+
+● Group 3: Optimizing a Database
+    ○ Design a NONCLUSTERED INDEX with ONE KEY COLUMN that improves the
+performance of one of the above queries.
