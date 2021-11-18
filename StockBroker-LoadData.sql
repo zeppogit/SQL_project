@@ -129,9 +129,8 @@ GO
 -- TradeLog (TradeID, PortfolioID, StockID, datetime, BuySellInOut, Num, Price)
 
 INSERT INTO TradeLog   
-VALUES  (1, 2, '2010-01-20 10:25:00', 'In', 50, 385.15);
+VALUES  (1, 2, 'In', 50, 385.15, '2010-01-20 10:25:00');
 GO
-
 
 
 --TEMPORARY FOR MY VERIFICATION

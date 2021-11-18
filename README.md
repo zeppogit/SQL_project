@@ -8,7 +8,9 @@ I created a database with a stock broker them with imaginary client and stock in
 
 # Description
 
-The database includes tables that store information about stocks that a broker follows, clients, stocks held by his clients, client portfolios made up of stocks that the broker follows, and a transaction log.        
+The database includes tables that store information about stocks that a broker follows, clients, stocks held by his clients, client portfolios made up of stocks that the broker follows, and a transaction log. 
+
+For the purposes of this project, it is assumed that no two clients will have the same first and last name.
 
 ## Features
 
