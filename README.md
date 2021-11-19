@@ -2,17 +2,17 @@
 
 
 # Introduction
-This repository for my Code Louisville Fall 2021 SQL course project. 
+This repository is for my Code Louisville Fall 2021 SQL course project. 
 
-I created a database with a stock broker them with imaginary client and stock information as a vehicle to demonstrate SQL coding. (Obiviously not designed as realistic stock management tool:  it may be assumed that stock information fields, such as price, are kept current by means not provided here).
+I created a database with a stock broker theme with imaginary client and stock information as a vehicle to demonstrate SQL coding. (Obiviously not designed as realistic stock management tool:  it may be assumed that stock information fields, such as price, are kept current by means not provided here).
 
 # Description
 
-The database includes tables that store information about stocks that a broker follows, clients, stocks held by his clients, client portfolios made up of stocks that the broker follows, and a transaction log. 
+The database includes tables that store information about stocks that a broker follows, his clients, stocks held by his clients, client portfolios made up of stocks that the broker follows, and a transaction log. 
 
 For the purposes of this project:
-It is assumed that no two clients will have the same first and last name.
-The LogATrade procedure is only to be used to sell shares that the client currently owns. 
+- It is assumed that no two clients will have the same first and last name.
+- The LogATrade procedure is only to be used to sell shares that the client currently owns. 
 (It is assumed that no attempt will be made to sell shares the client does not have).
 
 ## Features
