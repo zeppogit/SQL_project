@@ -14,7 +14,7 @@ For the purposes of this project, it is assumed that no two clients will have th
 
 ## Features
 
-Stored procedures will be added which
+Stored procedures
 
 | Feature | Command |
 | -------- | -------- |
