@@ -303,27 +303,7 @@ BEGIN
 END
 GO
 
-/** 
-    Stored Procedure: LogATrade
-    Usage: Creates a new trade record to the TradeLog table. 
-    -- TradeLog (TradeID, DateTime, BuySellInOut, Num, Price, Portfolio_id, Stocks_id)
-    -- TransType : transaction type is either Buy, Sell, In ( a transfer in), or Out.
-    -- FOR PURPOSES OF THIS PROJECT, IT IS ASSUMED NO TWO CLIENTS CAN HAVE THE SAME FIRST AND LAST NAME  *****
 
-    Parameters:
-        @DateTime(required) - Date and time trade requested
-        @FirstName - First name of client
-        @LastName - Last name of client
-        @AcctType - Regular, IRA, Roth, InheritedIRA, InheritedRoth  - assumes no more than one acct of each type
-        @Symbol - Stock symbol
-        @Number of shares traded  
-        @BuySellInOut
-        @Price  - Price of the stock when traded
-    Returns:
-        None
-    Error Checks:
-        Required fields cannot be empty
-**/
 
 /* =============================================================== */
 
