@@ -49,7 +49,12 @@ GO
 
 /** Log a stock transaction.  
 The date and time of the transaction will be used to update the LastContact information in the Clients table.  
-The number of shares will also be used to adjust the number of shares in the StocksHeld table by that client. **/
+The number of shares will also be used to adjust the number of shares in the StocksHeld table by that client. 
+If the result of the transaction leaves the client with zero shares, 
+    that stock is removed from the portfolio where the transaction took place.
+This procedure is only to be used to sell shares that the client currently owns. 
+(It is assumed that no attempt will be made to sell shares the client does not have).
+**/
 
 EXECUTE LogATrade @FirstName = "John", @LastName = "Smith", @AcctType = 'Roth', @Symbol = 'F', @BuySellInOut = 'SELL', @Number = 100, @Price = 17.00, @TradeDate = "2021-11-01 12:00:00"
 GO
@@ -64,7 +69,9 @@ SELECT *
 FROM TradeLog
 GO
 
-
+SELECT *
+FROM Clients
+GO
 
 SELECT *
 FROM StocksFollowed

@@ -10,7 +10,10 @@ I created a database with a stock broker them with imaginary client and stock in
 
 The database includes tables that store information about stocks that a broker follows, clients, stocks held by his clients, client portfolios made up of stocks that the broker follows, and a transaction log. 
 
-For the purposes of this project, it is assumed that no two clients will have the same first and last name.
+For the purposes of this project:
+It is assumed that no two clients will have the same first and last name.
+The LogATrade procedure is only to be used to sell shares that the client currently owns. 
+(It is assumed that no attempt will be made to sell shares the client does not have).
 
 ## Features
 

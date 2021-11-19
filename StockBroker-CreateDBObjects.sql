@@ -339,12 +339,16 @@ BEGIN
           SET @Number = -@Number
         END
     INSERT INTO TradeLog VALUES (@PortfolioID, @StockID, @BuySellInOut, @Number, @Price, @TradeDate)
-    UPDATE StocksHeld SET StocksHeld.NumShares = (@Number + StocksHeld.NumShares) WHERE ((PortfolioID = @PortfolioID) AND (StockID = @StockID));
-
+    DECLARE @StocksHeldID INT = ( SELECT StocksHeld.StocksHeldID FROM StocksHeld WHERE ((PortfolioID = @PortfolioID) AND (StockID = @StockID)))
+  
+    UPDATE StocksHeld SET StocksHeld.NumShares = (@Number + StocksHeld.NumShares) WHERE ((PortfolioID = @PortfolioID) AND (StockID = @StockID))
+    IF (( SELECT StocksHeld.NumShares  FROM StocksHeld WHERE (StocksHeldID = @StocksHeldID)) <= 0) 
+        BEGIN
+            DELETE FROM StocksHeld WHERE (StocksHeld.StocksHeldID = @StocksHeldID);
+        END
 END
 GO
-
-
+--*/
 /* ********************************************************************* */
 
 -- get all clients that hold a particular stock
