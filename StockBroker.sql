@@ -75,7 +75,7 @@ FROM Clients
 GO
 
 SELECT *
-FROM StocksFollowed
-GO
+FROM StocksHeld
+G0
 
 */
