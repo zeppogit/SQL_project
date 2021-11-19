@@ -19,11 +19,24 @@ EXECUTE DeleteFollowedStock @Symbol = "XOM"
 GO
 
 
+/** Show the stocks held in each portfolio, with portfolio owner name (client) and number of shares **/
+
+SELECT Portfolios.Type, Clients.FirstName, Clients.LastName, StocksFollowed.Symbol, StocksHeld.NumShares
+FROM Portfolios 
+   INNER JOIN Clients ON Clients.ClientID = Portfolios.ClientID
+   INNER JOIN StocksHeld ON StocksHeld.PortfolioID = Portfolios.PortfolioID
+   INNER JOIN StocksFollowed ON StocksFollowed.StockID = StocksHeld.StockID
+GO
 
 
-/** Show the stocks held by each clients, grouped by portfolio **/
+/** Show the stocks held by a particular client, grouped by portfolio **/
 
 EXECUTE StocksHeldByClient @FirstName = "John", @LastName ="Smith"
+GO
+
+/** Enter a stock symbol and see who owns it **/
+
+EXECUTE WhoHoldsParticularStock @Symbol = "LVS"  
 GO
 
 
@@ -42,22 +55,20 @@ EXECUTE LogATrade @FirstName = "John", @LastName = "Smith", @AcctType = 'Roth', 
 GO
 
 
+
 /* ================================================== */
 
 /*
-
-SELECT *
-FROM Clients
-GO
-
 
 SELECT *
 FROM TradeLog
 GO
 
 
+
 SELECT *
 FROM StocksFollowed
 GO
+
 
 */

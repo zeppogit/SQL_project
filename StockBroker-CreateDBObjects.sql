@@ -151,6 +151,11 @@ IF EXISTS ( SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = N'Lo
 DROP PROCEDURE LogATrade
 GO
 
+IF EXISTS ( SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE SPECIFIC_NAME = N'WhoHoldsParticularStock' AND ROUTINE_TYPE = N'PROCEDURE')
+DROP PROCEDURE WhoHoldsParticularStock
+GO
+
+
 /** 
     Stored Procedure: CreateFollowedStock
     Usage: Creates a new stock record to the StocksFollowed table. 
@@ -341,4 +346,33 @@ END
 GO
 
 
+/* ********************************************************************* */
 
+-- get all clients that hold a particular stock
+
+CREATE PROCEDURE WhoHoldsParticularStock @Symbol NVARCHAR(10) AS
+
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+    IF((@Symbol IS NULL) OR (@Symbol = ''))
+    BEGIN
+        RAISERROR('@Symbol cannot be null or empty',18,0)
+    END
+    ELSE
+    BEGIN    
+        SELECT Portfolios.Type, Clients.FirstName, Clients.LastName, StocksHeld.NumShares
+        FROM Clients 
+        INNER JOIN Portfolios ON Portfolios.ClientID = Clients.ClientID
+        INNER JOIN StocksHeld ON StocksHeld.PortfolioID = Portfolios.PortfolioID
+        INNER JOIN StocksFollowed ON StocksFollowed.StockID = StocksHeld.StockID
+        WHERE (StocksFollowed.Symbol = @Symbol)
+    END
+    END TRY
+    BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
+        SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState );
+    END CATCH
+END
+GO
