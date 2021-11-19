@@ -19,6 +19,7 @@ EXECUTE DeleteFollowedStock @Symbol = "XOM"
 GO
 
 
+
 /** Show the stocks held in each portfolio, with portfolio owner name (client) and number of shares **/
 
 SELECT Portfolios.Type, Clients.FirstName, Clients.LastName, StocksFollowed.Symbol, StocksHeld.NumShares
@@ -34,11 +35,11 @@ GO
 EXECUTE StocksHeldByClient @FirstName = "John", @LastName ="Smith"
 GO
 
+
 /** Enter a stock symbol and see who owns it **/
 
 EXECUTE WhoHoldsParticularStock @Symbol = "LVS"  
 GO
-
 
 
 /** Update the date and time of last contact with a client **/
@@ -59,7 +60,7 @@ This procedure is only to be used to sell shares that the client currently owns.
 EXECUTE LogATrade @FirstName = "John", @LastName = "Smith", @AcctType = 'Roth', @Symbol = 'F', @BuySellInOut = 'SELL', @Number = 100, @Price = 17.00, @TradeDate = "2021-11-01 12:00:00"
 GO
 
-
+-- NOTE: can execute the StocksHeldByClient example provided above to easily check on the changes to John Smith's portfolio.
 
 /* ================================================== */
 
@@ -76,6 +77,5 @@ GO
 SELECT *
 FROM StocksFollowed
 GO
-
 
 */
