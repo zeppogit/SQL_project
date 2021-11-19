@@ -120,7 +120,12 @@ GO
 -- TradeLog (TradeID, PortfolioID, StockID, datetime, BuySellInOut, Num, Price)
 
 INSERT INTO TradeLog   
-VALUES  (1, 2, 'In', 50, 385.15, '2010-01-20 10:25:00');
+VALUES  (2, 1, 'In', 1, 1148.15, '2019-02-04 10:25:00'),
+        (2, 1, 'In', 100, 8.77, '2019-02-04 10:25:00'),
+        (3, 7, 'Sell', 5, 318.11, '2021-07-08 11:38:00'),
+        (1, 11, 'Buy', 100, 55.10, '2021-03-03 14:11:00'),
+        (6, 14, 'Buy', 10, 132.22, '2021-03-17 09:41:00'),
+        (9, 22, 'Buy', 22, 61.50,  '2021-04-12 12:51:00');
 GO
 
 
@@ -148,9 +153,6 @@ SELECT *
 FROM TradeLog
 GO
 
-SELECT *
-FROM StocksHeld
-ORDER BY PortfolioID, StockID
-GO
+
 
 */

@@ -335,7 +335,6 @@ BEGIN
           SET @Number = -@Number
         END
     INSERT INTO TradeLog VALUES (@PortfolioID, @StockID, @BuySellInOut, @Number, @Price, @TradeDate)
-   -- consider changing @Price to @TradePrice
     UPDATE StocksHeld SET StocksHeld.NumShares = (@Number + StocksHeld.NumShares) WHERE ((PortfolioID = @PortfolioID) AND (StockID = @StockID));
 
 END
