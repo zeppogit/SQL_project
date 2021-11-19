@@ -292,7 +292,6 @@ BEGIN
     ELSE
         BEGIN  
         UPDATE Clients SET Clients.LastContact = @LastContact WHERE (Clients.FirstName = @FirstName AND Clients.LastName = @LastName);
-    -- make note that this assumes there are no clients with same first and last name 
         END
     END TRY
     BEGIN CATCH
