@@ -23,6 +23,7 @@ Stored procedures
 | Delete a stock from the list of Stocks Followed| DeleteFollowedStock |
 | Log a new transaction and reflect changes in client's portfolio and personal record (date of last contact)| TradeLog |
 | Update the date and time of last contact with a client | UpdateLastContact |
+| Get all clients that hold a particular stock | WhoHoldsParticularStock |
 
 ## Technical Instructions
 - Requires MS SQL Server or Azure (I used Azure).

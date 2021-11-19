@@ -19,7 +19,7 @@
  *      StocksHeldByClient @FirstName, @LastName
  *      UpdateLastContact @FirstName, @LastName, @LastContact 
  *      LogATrade @FirstName, @LastName, @AcctType, @Symbol, @BuySellInOut, @Number, @Price, @TradeDate
- *
+ *      WhoHoldsParticularStock, @Symbol
  */
 
 
